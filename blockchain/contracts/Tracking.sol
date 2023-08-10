@@ -2,7 +2,7 @@
  pragma solidity ^0.8.0;
  contract Tracking {
     enum ShipmentStatus { PENDING, IN_TRANSIT, DELIVERED}
-
+// declaration of variable used 
 struct Shipment {
         address sender;
         address reciever;
@@ -41,7 +41,7 @@ struct Shipment {
      constructor(){
         shipmentCount = 0;
      }
-
+//  users creating their shipment
      function CreateShipment( address _reciever, uint256 _pickupTime, uint256 _distance,
       uint256 _price ) public  payable{
          require( msg.value ==_price, "Payment amount must match the price,");
@@ -67,7 +67,7 @@ struct Shipment {
 
          emit ShipmentCreated (msg.sender , _reciever, _pickupTime , _distance, _price);
      }
-
+// shiping company start their shipping  company
      function StartShipment(address _sender, address _reciever, uint256 _index ) public{
         Shipment storage shipment = shipments [ _sender][_index];
         TyepShipment storage tyepShipment = tyepShipments[_index];
@@ -79,7 +79,7 @@ struct Shipment {
         tyepShipment.status = ShipmentStatus.IN_TRANSIT;
         emit ShipmentInTransit ( _sender, _reciever, shipment.pickupTime );
      }
-
+// shipping is completed 
      function CompleteShipment(address _sender, address _reciever, uint256 _index) public {
         Shipment storage shipment = shipments[ _sender][_index];
         TyepShipment storage tyepShipment = tyepShipments[_index];
@@ -104,18 +104,18 @@ struct Shipment {
         emit ShipmentPaid(_sender, _reciever, amount);
 
      }
-
+// here the end user get their items delivered 
      function getShipment (address _sender, uint256 _index) public view returns( address, address , uint256, uint256,uint256,   uint256, ShipmentStatus, bool ){
         Shipment memory  shipment = shipments[_sender][_index];
         return(
             shipment.sender, shipment.reciever, shipment.pickupTime, shipment.deliveryTime , shipment.distance, shipment.price, shipment.status, shipment.isPaid
         );
      }
-
+// here the user is able to track the number of shipment made
      function getShipmentCount(address _sender) public view returns(uint256){
         return shipments[_sender].length;
      }
-
+ // user make payment after recieving their goods 
      function getAllTransactions()
         public
         view
